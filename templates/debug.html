@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% from '_macros.html' import metric with context %}
+{% block title %}Диагностика узла · OilCoin{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ПУБЛИЧНАЯ ДИАГНОСТИКА</div><h1>Состояние узла</h1><p>Данные для разбора работы приложения на защите проекта.</p></div><a class="btn btn-secondary" href="{{ url_for('debug_state') }}">Открыть JSON ↗</a></div>
+<section class="grid metrics-grid metrics-three">{{ metric('Блоков', payload.chain_length) }}{{ metric('Переводов в очереди', payload.pending_count) }}{{ metric('Сложность', payload.difficulty) }}</section>
+<section class="card section-space"><h2>Проверенный снимок</h2><p>Здесь только открытые данные цепочки. Аккаунты, пароли и приватные ключи в этот снимок не входят.</p><pre class="json-view">{{ payload | tojson(indent=2) }}</pre></section>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Ошибка {{ code }} · OilCoin{% endblock %}
+{% block content %}
+<section class="card"><div class="eyebrow">ОШИБКА {{ code }}</div><h1>Действие не выполнено</h1><p>{{ message }}</p><div class="button-row"><a class="btn" href="{{ url_for('dashboard_page') if is_logged_in else url_for('index') }}">Вернуться к обзору →</a><a class="btn btn-secondary" href="{{ url_for('explorer_page') }}">Открыть проводник</a></div></section>
+{% endblock %}

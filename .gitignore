@@ -1,0 +1,55 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Flask/local environment
+.env
+.flaskenv
+instance/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# Local runtime state (generated automatically)
+/to_me/
+blockchain.json
+wallets.json
+blockchain.backup.*.json
+
+# SQLite state, backups and local secrets
+data/
+backups/
+.secret_key
+*.secret_key
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+.env.*
+!.env.example

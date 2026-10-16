@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Проверка цепочки · OilCoin{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ПРОВЕРКА ПРАВИЛ СЕТИ</div><h1>Целостность блокчейна</h1><p>История проверяется от genesis до последнего блока.</p></div></div>
+<section class="card"><span class="badge {{ 'badge-success' if valid else 'badge-warning' }}">{{ 'ПРОВЕРКА ПРОЙДЕНА' if valid else 'НАРУШЕНИЕ ЦЕЛОСТНОСТИ' }}</span><h2>{{ 'Цепочка соответствует правилам' if valid else 'Цепочку нельзя использовать' }}</h2><p>{{ message }}</p><div class="button-row"><a class="btn btn-secondary" href="{{ url_for('validate_page') }}">Проверить снова ↻</a><a class="btn btn-secondary" href="{{ url_for('explorer_page') }}">Открыть проводник ↗</a></div></section>
+<section class="grid two-column section-space"><article class="card"><h2>Что проверяется</h2><ul class="explain-list"><li>Порядок блоков и связи previous_hash.</li><li>SHA-256 каждого блока и доказательство работы.</li><li>Ed25519-подписи, sequence и сеть каждого перевода.</li><li>Достаточность средств и отсутствие повторных трат.</li><li>Награды, комиссии, сжигание и лимит эмиссии.</li></ul></article><article class="card"><h2>Границы этой проверки</h2><p>Она проверяет историю на этом сервере. Независимых узлов, которые могли бы сравнить свою копию с этой, в проекте нет.</p><p>При повреждении хранилища узел прекращает обработку запросов и возвращает 503. Восстановление выполняется из проверенной резервной копии.</p></article></section>
+{% endblock %}

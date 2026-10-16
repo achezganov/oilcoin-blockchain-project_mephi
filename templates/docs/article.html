@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from 'docs/_navigation.html' import navigation %}
+{% block title %}{{ document.title }} · Помощь OilCoin{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='docs.css') }}"><script src="{{ url_for('static', filename='docs.js') }}" defer></script>{% endblock %}
+{% block content %}
+<div class="docs-layout">
+  {{ navigation(groups, document.slug) }}
+  <div class="docs-main">
+    <nav class="docs-breadcrumbs" aria-label="Путь к статье"><a href="{{ url_for('documentation.index') }}">Помощь</a><span aria-hidden="true">/</span><span>{{ document.group }}</span></nav>
+    <header class="docs-article-header"><div class="eyebrow">{{ document.title }} · {{ article.minutes }} МИН ЧТЕНИЯ</div><h1 {% if article.title_anchor %}id="{{ article.title_anchor }}"{% endif %}>{{ article.title }}</h1><p>{{ document.description }}</p><div class="docs-article-tools"><a href="{{ url_for('documentation.source', slug=document.slug) }}" download>Скачать руководство ↓</a><button type="button" class="link-button" data-docs-print>Печать / PDF</button></div></header>
+    {% if document.slug == 'player-guide' %}<div class="docs-game-callout"><span>Читайте и пробуйте в своём темпе. Действия сохраняются в кошельке.</span><a href="{{ url_for('dashboard_page') if is_logged_in else url_for('register_page') }}">{{ 'Открыть мой кабинет' if is_logged_in else 'Создать кошелёк' }} →</a></div>{% endif %}
+    <div class="docs-reading-grid">
+      <article class="docs-prose" aria-label="Текст руководства">{{ article.html }}</article>
+      {% if article.toc %}<aside class="docs-toc"><details open data-docs-toc><summary>На этой странице <span aria-hidden="true">⌄</span></summary><nav aria-label="Оглавление статьи">{% for heading in article.toc %}<a class="docs-toc-level-{{ heading.level }}" href="#{{ heading.id }}">{{ heading.title }}</a>{% endfor %}</nav></details></aside>{% endif %}
+    </div>
+    <nav class="docs-pager" aria-label="Предыдущая и следующая статья">{% if previous %}<a href="{{ url_for('documentation.page', slug=previous.slug) }}"><small>← Предыдущая статья</small><strong>{{ previous.title }}</strong></a>{% else %}<a href="{{ url_for('documentation.index') }}"><small>← Все руководства</small><strong>Центр помощи</strong></a>{% endif %}{% if next %}<a href="{{ url_for('documentation.page', slug=next.slug) }}"><small>Следующая статья →</small><strong>{{ next.title }}</strong></a>{% endif %}</nav>
+    <div class="docs-bottom-note">Не нашли ответ? <a href="{{ url_for('documentation.index') }}">Попробуйте поиск по всем руководствам</a>.</div>
+  </div>
+</div>
+{% endblock %}

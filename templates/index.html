@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from '_macros.html' import metric with context %}
+{% block title %}Обзор сети · OilCoin{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">СОСТОЯНИЕ УЧЕБНОЙ СЕТИ</div><h1>От первого блока к своей истории</h1><p>Изучайте экономику OIL и проверяйте каждую операцию в проводнике.</p></div><a class="btn" href="{{ url_for('dashboard_page') if is_logged_in else url_for('register_page') }}">{{ 'Мой кошелёк' if is_logged_in else 'Начать игру' }} ↗</a></div>
+<section class="grid metrics-grid metrics-four">
+  {{ metric('Блоков в цепочке', block_count, '', 'Включая начальный genesis') }}
+  {{ metric('В очереди', pending_count, 'TX') }}
+  {{ metric('Сложность', difficulty, '', 'Ведущие нули хеша') }}
+  {{ metric('Награда за блок', mining_reward, 'OIL') }}
+  {{ metric('Лимит эмиссии', max_supply, 'OIL') }}
+  {{ metric('Всего выпущено', total_minted, 'OIL') }}
+  {{ metric('В обращении', circulating_supply, 'OIL') }}
+  {{ metric('Сожжено', burned_supply, 'OIL') }}
+</section>
+<section class="grid two-column section-space"><article class="card"><div class="eyebrow">ВАШ ПЕРВЫЙ СЦЕНАРИЙ</div><h2>Добыть. Подписать. Подтвердить.</h2><ol class="process-list"><li><span>01</span><div><h3>Создайте кошелёк</h3><p>Запишите адрес и пароль. Баланс нового аккаунта равен нулю.</p></div></li><li><span>02</span><div><h3>Дождитесь блока</h3><p>Оставьте базу открытой: фоновый узел подберёт nonce, запишет блок и начислит награду одному из активных игроков.</p></div></li><li><span>03</span><div><h3>Отправьте OIL</h3><p>Перевод получит цифровую подпись и попадёт в очередь. Следующий блок подтвердит его.</p></div></li></ol></article><article class="card"><div class="eyebrow">ПРОВЕРЯЕМАЯ ЭКОНОМИКА</div><h2>Все данные открыты</h2><p>Откройте проводник, изучите связи блоков и подписи транзакций. Метрики строятся из подтверждённой истории.</p><div class="button-row"><a class="btn btn-secondary" href="{{ url_for('explorer_page') }}">Проводник ↗</a><a class="btn btn-secondary" href="{{ url_for('tokenomics_page') }}">Экономика ↗</a></div><div class="note section-space">Это один учебный узел. Независимых участников консенсуса и подключения к публичной криптовалютной сети здесь нет.</div></article></section>
+{% endblock %}

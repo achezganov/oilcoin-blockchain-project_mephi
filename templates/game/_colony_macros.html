@@ -1,0 +1,4 @@
+{% macro avatar(value, extra='') %}{% set bits=value.split(':') %}<span class="avatar {{ 'avatar-boss' if bits[0]=='boss' else 'avatar-card' if bits[0]=='card' else 'avatar-adviser' }} {{ extra }}" style="--portrait-x:{{ (bits[1]|int)*50 if bits[0]=='boss' else (bits[1]|int % 4)*100/3 }}%;--portrait-y:{{ (bits[1]|int // 4)*100 }}%" aria-hidden="true"></span>{% endmacro %}
+{% macro adviser(index, name, text) %}<aside class="adviser"><span class="adviser-art" style="--portrait-x:{{ index*100/3 }}%" aria-hidden="true"></span><div><small>СОВЕТНИК · {{ name }}</small><p>{{ text }}</p></div></aside>{% endmacro %}
+{% macro portrait(id) %}<span class="card-portrait" style="--portrait-x:{{ (id % 4)*100/3 }}%;--portrait-y:{{ (id // 4)*100 }}%"></span>{% endmacro %}
+{% macro chest(kind) %}<span class="treasure {{ 'treasure-violet' if kind=='admiral' else 'treasure-gold' if kind=='captain' }}" aria-hidden="true"><i></i><b>◈</b></span>{% endmacro %}

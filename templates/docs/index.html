@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Помощь и документация · OilCoin{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='docs.css') }}">{% endblock %}
+{% block content %}
+<section class="docs-hero">
+  <div class="eyebrow">БАЗА ЗНАНИЙ OILCOIN</div>
+  <h1>Понимай каждое действие.</h1>
+  <p>Как развивать базу, соединять заводы трубами, побеждать на PvP-арене и понимать свой блокчейн. Все руководства — здесь.</p>
+  <form action="{{ url_for('documentation.index') }}" method="get" class="docs-search" role="search">
+    <label class="sr-only" for="docs-query">Поиск по всем руководствам</label>
+    <span aria-hidden="true">⌕</span><input type="search" id="docs-query" name="q" value="{{ query }}" placeholder="Например: комиссия, улучшение, Docker…" maxlength="120">
+    <button class="btn" type="submit">Найти <span aria-hidden="true">→</span></button>
+  </form>
+  <div class="docs-popular"><span>Часто ищут:</span>{% for term in ['трубы', 'PvP', 'комиссия', 'Docker'] %}<a href="{{ url_for('documentation.index', q=term) }}">{{ term }}</a>{% endfor %}</div>
+</section>
+{% if query %}
+<section class="docs-search-results" aria-label="Результаты поиска">
+  <div class="section-heading"><div><div class="eyebrow">ПОИСК ПО ВСЕМ РАЗДЕЛАМ</div><h2>Результаты для «{{ query }}»</h2></div><a href="{{ url_for('documentation.index') }}">Сбросить поиск ×</a></div>
+  <p class="muted text-small">Найдено разделов: {{ results | length }}. Ссылки ведут сразу к нужному месту в статье.</p>
+  {% for result in results %}
+  <a class="card docs-search-result" href="{{ url_for('documentation.page', slug=result.document.slug, _anchor=result.anchor) }}"><span class="eyebrow">{{ result.document.group }} / {{ result.document.title }}</span><h3>{{ result.heading }} <span aria-hidden="true">↗</span></h3><p>{{ result.excerpt }}</p></a>
+  {% else %}
+  <div class="card empty-state"><span class="empty-symbol">⌕</span><h3>Пока не нашли такой ответ</h3><p>Попробуйте одно слово: «баланс», «комиссия» или «блок». Можно выбрать руководство ниже.</p><a class="btn btn-secondary" href="{{ url_for('documentation.page', slug='faq') }}">Посмотреть частые вопросы →</a></div>
+  {% endfor %}
+</section>
+{% else %}
+<section class="docs-start-card">
+  <div class="docs-start-copy"><span class="eyebrow">ВПЕРВЫЕ В OILCOIN?</span><h2>От маленького участка<br>до собственной империи.</h2><p>Пошаговый маршрут: что нажать, какой результат ждать и зачем делать следующий шаг.</p><a class="btn" href="{{ url_for('documentation.page', slug='islands-guide') }}">Как играть · начать здесь →</a></div>
+  <ol class="docs-route"><li><span>01</span><div><strong>Основай базу</strong><small>Сохрани адрес и пароль</small></div></li><li><span>02</span><div><strong>Собери нефть</strong><small>Соедини заводы трубами</small></div></li><li><span>03</span><div><strong>Развивай здания</strong><small>Оплата и готовность — автоматически</small></div></li><li><span>04</span><div><strong>Победи на арене</strong><small>Карты, эликсир и живой соперник</small></div></li></ol>
+</section>
+<section class="docs-quick-links" aria-label="Быстрые ответы">
+  <a href="{{ url_for('documentation.page', slug='player-guide', _anchor='что-даёт-каждое-действие') }}"><span>Зачем нужны игровые действия?</span><strong>Цель → действие → результат ↗</strong></a>
+  <a href="{{ url_for('documentation.page', slug='faq', _anchor='почему-перевод-всё-ещё-в-очереди') }}"><span>Перевод не подтвердился?</span><strong>Узнать, что делать дальше ↗</strong></a>
+  <a href="{{ url_for('documentation.page', slug='architecture') }}"><span>Готовишься к защите?</span><strong>Разобраться в блокчейне ↗</strong></a>
+</section>
+{% endif %}
+<section class="docs-catalogue" aria-label="Все руководства">
+  <div class="section-heading"><div><div class="eyebrow">{{ documents | length }} РУКОВОДСТВ · ЕДИНАЯ БИБЛИОТЕКА</div><h2>Выберите свой раздел</h2></div><span class="muted text-small">От игры к устройству проекта</span></div>
+  {% for group in groups %}<div class="docs-catalogue-group"><h3>{{ group.title }}</h3><div class="docs-card-grid">
+    {% for item in group.documents %}<a class="card docs-card" href="{{ url_for('documentation.page', slug=item.slug) }}"><span class="docs-card-icon" aria-hidden="true">{{ item.icon }}</span><div><h3>{{ item.title }}</h3><p>{{ item.description }}</p></div><span class="docs-card-arrow" aria-hidden="true">↗</span></a>{% endfor %}
+  </div></div>{% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,73 @@
+name: oilcoin
+
+services:
+  app:
+    build: .
+    image: oilcoin-local:latest
+    init: true
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      SECRET_KEY: ${SECRET_KEY:?Set a random SECRET_KEY in .env before starting}
+      DATABASE_PATH: /data/oilcoin.db
+      MINING_DIFFICULTY: ${MINING_DIFFICULTY:-3}
+      ENABLE_DEMO: ${ENABLE_DEMO:-false}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      ALLOW_MANUAL_MINING: "false"
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:5000"
+    volumes:
+      - oilcoin_data:/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 130s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  worker:
+    image: oilcoin-local:latest
+    build: .
+    init: true
+    restart: unless-stopped
+    command: ["python", "worker.py"]
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      SECRET_KEY: ${SECRET_KEY:?Set a random SECRET_KEY in .env before starting}
+      DATABASE_PATH: /data/oilcoin.db
+      MINING_DIFFICULTY: ${MINING_DIFFICULTY:-3}
+      ENABLE_DEMO: "false"
+      ALLOW_MANUAL_MINING: "false"
+    volumes:
+      - oilcoin_data:/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    stop_grace_period: 130s
+    healthcheck:
+      test: ["CMD", "python", "scripts/worker_health.py"]
+      interval: 15s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  oilcoin_data:

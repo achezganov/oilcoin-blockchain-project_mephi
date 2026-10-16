@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% from '_macros.html' import csrf with context %}
+{% block title %}Вход в кошелёк · OilCoin{% endblock %}
+{% block content %}
+<div class="auth-layout"><section class="auth-intro"><div class="eyebrow">С ВОЗВРАЩЕНИЕМ В ЛАБОРАТОРИЮ</div><h1>Ваша история<br>продолжается.</h1><p>Блоки, монеты и достижения сохраняются между сеансами. Войдите по адресу кошелька, чтобы продолжить исследование.</p><div class="auth-symbol" aria-hidden="true">◈</div><p class="text-small muted">OIL используется только внутри учебной игры.</p></section><section class="card auth-card"><h2>Вход в кошелёк</h2><p class="muted">Адрес был создан при регистрации.</p><form method="post" class="form-grid">{{ csrf() }}<label>Адрес кошелька<input type="text" name="address" value="{{ request.form.get('address', request.args.get('address', '')) }}" placeholder="OIL_…" autocomplete="username" spellcheck="false" required></label><label>Пароль<input type="password" name="password" autocomplete="current-password" required></label><button class="btn btn-wide" type="submit">Войти →</button></form><p class="auth-switch">Первый раз здесь? <a href="{{ url_for('register_page') }}">Создать кошелёк</a></p><div class="note compact-note">Адрес публичный: его можно передать другому игроку для перевода. Пароль нужен только для входа.</div></section></div>
+{% endblock %}

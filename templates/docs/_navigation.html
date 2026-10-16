@@ -1,0 +1,25 @@
+{% macro navigation(groups, active_slug='') %}
+<aside class="docs-sidebar">
+  <details class="docs-navigation" open data-docs-navigation>
+    <summary>Разделы документации <span aria-hidden="true">⌄</span></summary>
+    <div class="docs-navigation-body">
+      <a class="docs-home-link" href="{{ url_for('documentation.index') }}">← Центр помощи</a>
+      <form action="{{ url_for('documentation.index') }}" method="get" class="docs-side-search" role="search">
+        <label class="sr-only" for="docs-side-query">Поиск по документации</label>
+        <input id="docs-side-query" name="q" placeholder="Найти ответ…" maxlength="120" type="search">
+        <button type="submit" aria-label="Найти в документации">⌕</button>
+      </form>
+      <nav aria-label="Разделы документации">
+        {% for group in groups %}
+        <div class="docs-nav-group"><h2>{{ group.title }}</h2>
+          {% for item in group.documents %}
+          <a href="{{ url_for('documentation.page', slug=item.slug) }}" class="{{ 'is-current' if item.slug == active_slug }}" {% if item.slug == active_slug %}aria-current="page"{% endif %}>{{ item.title }}</a>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </nav>
+      <div class="docs-sidebar-note"><span class="status-dot"></span> Одна игра. Понятные правила.<p>От первого кошелька до устройства сервера.</p></div>
+    </div>
+  </details>
+</aside>
+{% endmacro %}

@@ -1,0 +1,13 @@
+{% macro csrf() -%}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{%- endmacro %}
+{% macro metric(label, value, suffix='', hint='') -%}
+<article class="card metric"><span class="metric-label">{{ label }}</span><strong>{{ value }}{% if suffix %}<small>{{ suffix }}</small>{% endif %}</strong>{% if hint %}<span class="metric-hint">{{ hint }}</span>{% endif %}</article>
+{%- endmacro %}
+{% macro address_link(value) -%}
+{% if value and value.startswith('OIL_') %}<a class="mono" href="{{ url_for('address_detail_page', address=value) }}" title="{{ value }}">{{ short_id(value, 8, 6) }}</a>{% else %}<span class="muted">{{ value or 'Система' }}</span>{% endif %}
+{%- endmacro %}
+{% macro tx_type(value) -%}{{ {'transfer':'Перевод', 'mining_reward':'Награда за блок', 'miner_fee':'Комиссия майнеру', 'genesis':'Начало цепочки'}.get(value, value) }}{%- endmacro %}
+{% macro tx_table(operations, empty='Операций пока нет. Добудьте первый блок, чтобы получить OIL.') -%}
+{% if operations %}<div class="table-wrap"><table class="table"><thead><tr><th>Операция</th><th>Отправитель → получатель</th><th>Сумма</th><th>Статус</th><th>Блок</th></tr></thead><tbody>
+{% for op in operations %}{% set tx = op.transaction %}<tr><td><span class="table-primary">{{ tx_type(tx.type) }}</span>{% if tx.tx_id %}<a class="mono text-small" href="{{ url_for('transaction_detail_page', tx_id=tx.tx_id) }}">{{ short_id(tx.tx_id, 9, 5) }}</a>{% endif %}</td><td><div class="address-pair">{{ address_link(tx.sender) }}<span aria-hidden="true">→</span>{{ address_link(tx.recipient) }}</div></td><td><strong class="nowrap">{{ tx.amount }} <span class="muted text-small">OIL</span></strong><span class="table-secondary">Комиссия {{ tx.fee | default(0) }}</span></td><td><span class="badge {{ 'badge-success' if op.status == 'confirmed' else 'badge-warning' }}">{{ 'Подтверждено' if op.status == 'confirmed' else 'В очереди' }}</span></td><td>{% if op.block_index is not none %}<a href="{{ url_for('block_detail_page', index=op.block_index) }}">#{{ op.block_index }}</a>{% else %}<span class="muted">—</span>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div>{% else %}<div class="empty-state"><span class="empty-symbol" aria-hidden="true">◇</span><h3>История начинается здесь</h3><p>{{ empty }}</p></div>{% endif %}
+{%- endmacro %}

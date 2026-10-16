@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from '_macros.html' import csrf, metric with context %}
+{% block title %}Демонстрация · OilCoin{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ЛАБОРАТОРНАЯ РАБОТА</div><h1>Готовый сценарий для исследования</h1><p>Пять кошельков, майнинг, переводы и комиссии в одной истории.</p></div></div>
+{% if not demo.enabled %}
+<section class="card"><span class="badge">ДЕМО-ГЕНЕРАТОР ВЫКЛЮЧЕН</span><h2>Создайте собственную историю</h2><p>Зарегистрируйте кошелёк, добудьте блок, отправьте перевод другому участнику и подтвердите его следующим блоком. Все возможности игры доступны без демонстрационных аккаунтов.</p><a class="btn" href="{{ url_for('dashboard_page') if is_logged_in else url_for('register_page') }}">{{ 'Мой кошелёк' if is_logged_in else 'Создать кошелёк' }} ↗</a></section>
+{% else %}
+<div class="note"><h2>Общий учебный стенд</h2><p>Пароль демонстрационных кошельков известен всем посетителям: <strong>{{ demo.demo_password_hint }}</strong>. Используйте их только для презентации. Отключение генератора не удаляет эти аккаунты.</p></div>
+<section class="card section-space"><h2>{{ 'Учебные кошельки созданы' if demo.demo_wallets_exist else 'Подготовить демонстрацию' }}</h2><p>Генератор создаёт кошельки, шесть блоков, четыре подтверждённых перевода и два ожидающих. Повторный запуск сохраняет существующий сценарий.</p>{% if is_logged_in %}<form method="post" action="{{ url_for('demo_generate_page') }}" data-busy="Готовим цепочку…">{{ csrf() }}<button class="btn" type="submit">{{ 'Проверить демо-сценарий' if demo.demo_wallets_exist else 'Создать демонстрационные данные' }} →</button></form>{% else %}<a class="btn" href="{{ url_for('login_page') }}">Войти для генерации →</a>{% endif %}</section>
+<section class="grid metrics-grid metrics-three section-space">{{ metric('Блоков', demo.stats.blocks) }}{{ metric('В очереди', demo.stats.pending_transactions) }}{{ metric('Выпущено', demo.stats.total_minted, 'OIL') }}</section>
+{% if demo.demo_wallets %}<section class="card section-space"><h2>Кошельки для исследования</h2><div class="table-wrap"><table class="table"><thead><tr><th>Имя</th><th>Адрес</th><th>Действие</th></tr></thead><tbody>{% for wallet in demo.demo_wallets %}<tr><td>{{ wallet.label }}</td><td><a class="mono" href="{{ url_for('address_detail_page', address=wallet.address) }}">{{ wallet.address }}</a></td><td><button type="button" class="copy-btn" data-copy="{{ wallet.address }}">Копировать</button></td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+{% endif %}
+{% endblock %}

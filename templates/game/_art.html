@@ -1,0 +1,36 @@
+{% macro building_art(kind, level=1) %}
+<svg viewBox="0 0 180 170" class="building-art art-{{ kind }}" aria-hidden="true">
+  <ellipse cx="90" cy="145" rx="64" ry="17" fill="#0b251d" opacity=".32"/>
+  {% if kind == 'hq' %}
+  <path d="M30 87 90 56 150 87 150 130 90 162 30 130Z" fill="#547a8c"/><path d="M90 115 150 87V130L90 162Z" fill="#2c495e"/>
+  <path d="M24 86 90 46 156 86 90 124Z" fill="#84adad"/><path d="M90 49 137 76 137 110 90 137 43 110V76Z" fill="#c5d6c5"/><path d="M90 100 137 76V110L90 137Z" fill="#7faaa3"/>
+  <path d="M35 73 90 32 145 73 90 106Z" fill="#377b6b"/><path d="M90 32 145 73 90 106Z" fill="#235646"/>
+  <path d="M68 103V127L84 137V112Z" fill="#244b4b"/><path d="M102 104 118 95V112L102 121Z" fill="#efd879"/>
+  <path d="M90 34V10" stroke="#d4d9b7" stroke-width="3"/><path d="M92 9H120L110 20H92Z" fill="#e8c866"/>
+  {% elif kind == 'pump' %}
+  <path d="M30 125 104 91 155 118 80 154Z" fill="#b8a879"/><path d="M30 125V137L80 164V154Z" fill="#84764e"/><path d="M80 154 155 118V130L80 164Z" fill="#68694e"/>
+  <path d="M65 132 85 52 104 119M77 82H95M70 111H102" fill="none" stroke="#364e51" stroke-width="9" stroke-linejoin="round"/>
+  <g class="pump-beam"><path d="M42 49 115 43 140 62" fill="none" stroke="#f2c46a" stroke-width="11" stroke-linejoin="round"/><path d="M135 55Q150 69 136 91" fill="none" stroke="#d79245" stroke-width="13"/></g>
+  <path d="M138 89V131" stroke="#d5e3d0" stroke-width="3"/><path d="M113 129 139 116 156 126 132 140Z" fill="#477d74"/>
+  <circle cx="63" cy="107" r="16" fill="#d89446"/><circle cx="63" cy="107" r="7" fill="#4a5550"/>
+  {% elif kind == 'depot' %}
+  <path d="M24 112 90 78 160 113 91 150Z" fill="#607d74"/>
+  {% for x,y in [(61,53),(118,74),(63,104)] %}<path d="M{{ x-25 }} {{ y }}v35a25 12 0 0 0 50 0v-35" fill="{{ '#93b5ad' if loop.index != 2 else '#679c99' }}"/><ellipse cx="{{ x }}" cy="{{ y }}" rx="25" ry="12" fill="#d3e1c9"/><ellipse cx="{{ x }}" cy="{{ y }}" rx="16" ry="7" fill="#b2c8b7"/><path d="M{{ x+16 }} {{ y+6 }}v30" stroke="#548782" stroke-width="4"/>{% endfor %}
+  {% elif kind == 'refinery' %}
+  <path d="M25 106 89 73 154 108 88 144Z" fill="#a9a578"/><path d="M25 106v25l63 31v-18Z" fill="#858b61"/><path d="M88 144 154 108V134L88 162Z" fill="#61745e"/>
+  <path d="M48 63v62M91 33v80M126 76v53" stroke="#668c8e" stroke-width="22"/><ellipse cx="48" cy="63" rx="11" ry="6" fill="#d0ded0"/><ellipse cx="91" cy="33" rx="11" ry="6" fill="#dfc67c"/><ellipse cx="126" cy="76" rx="11" ry="6" fill="#d0ded0"/>
+  <path d="M47 80H92V61M94 97H126V88" stroke="#e6bc62" stroke-width="6" fill="none"/>
+  <path d="M67 140V109L109 89V119Z" fill="#b7c7b5"/><path d="M78 121 93 114" stroke="#447a77" stroke-width="6"/>
+  {% elif kind in ['pump_station','workshop','fuel_station','compressor','battery','warehouse'] %}
+  <path d="M24 112 90 76 158 112 91 150Z" fill="#bdad7d"/><path d="M24 112v17l67 33v-12Z" fill="#897748"/><path d="M91 150 158 112v18l-67 32Z" fill="#6d714b"/>
+  <path d="M42 72 93 43 143 72v56l-50 26-51-27Z" fill="{{ '#aaa0ca' if kind=='battery' else '#9bc4b3' }}"/><path d="M93 101 143 72v56l-50 26Z" fill="#54847e"/><path d="M34 72 93 31 151 71 93 106Z" fill="{{ '#7594be' if kind in ['workshop','warehouse'] else '#d7b768' }}"/>
+  <circle cx="93" cy="84" r="23" fill="#264d50" stroke="#e2d597" stroke-width="4"/><text x="93" y="94" text-anchor="middle" fill="#eee4ac" font-size="28">{{ {'pump_station':'♟','workshop':'⚙','fuel_station':'ϟ','compressor':'◎','battery':'✦','warehouse':'▤'}[kind] }}</text>
+  {% else %}
+  <path d="M26 89 96 55 154 86V129L84 162 26 130Z" fill="#b9b891"/><path d="M84 121 154 86V129L84 162Z" fill="#878f75"/><path d="M20 88 92 42 159 83 84 125Z" fill="#5c8494"/><path d="M92 42 159 83 84 125Z" fill="#3c6376"/>
+  <path d="M37 105 70 122V148L37 131Z" fill="#344c4a"/><path d="M100 126 130 111 159 126 130 143Z" fill="#e5b85e"/><path d="M100 126V140L130 156V143Z" fill="#b18745"/><path d="M130 143 159 126V141L130 156Z" fill="#af9857"/><circle cx="114" cy="147" r="7" fill="#263e40"/><circle cx="147" cy="144" r="7" fill="#263e40"/>
+  {% endif %}
+  {% if level > 1 %}<g><circle cx="146" cy="37" r="17" fill="#f4d078" stroke="#816239" stroke-width="3"/><text x="146" y="43" text-anchor="middle" font-size="17" font-weight="800" fill="#394842">{{ level }}</text></g>{% endif %}
+</svg>
+{% endmacro %}
+{% macro cost(resources, names) %}{% for key, amount in resources.items() %}<span class="cost-pill cost-{{ key }}">{{ amount }} {{ names[key] }}</span>{% endfor %}{% endmacro %}
+{% macro countdown(job) %}<span data-countdown="{{ job.ready_at or 0 }}">{{ 'Готово — заберите результат' if job.ready else 'Ждёт подтверждения блоком' if not job.ready_at else '%d:%02d' | format(job.remaining // 60, job.remaining % 60) }}</span>{% endmacro %}

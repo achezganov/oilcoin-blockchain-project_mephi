@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% from '_macros.html' import csrf, metric with context %}
+{% block title %}Проверка баланса · OilCoin{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ПУБЛИЧНЫЕ ДАННЫЕ</div><h1>Баланс любого адреса</h1><p>Баланс вычисляется из подтверждённой истории блоков.</p></div></div>
+<section class="card"><form method="post" class="form-grid">{{ csrf() }}<label>Адрес кошелька<input name="address" value="{{ address }}" placeholder="OIL_…" pattern="OIL_[0-9a-f]{32}" maxlength="36" required spellcheck="false" autocomplete="off"></label><button type="submit" class="btn">Проверить баланс →</button></form></section>
+{% if snapshot %}<section class="grid metrics-grid metrics-three section-space">{{ metric('Подтверждено', snapshot.confirmed_balance, 'OIL') }}{{ metric('Зарезервировано', snapshot.reserved_pending, 'OIL') }}{{ metric('Доступно', snapshot.available_balance, 'OIL') }}</section><div class="note section-space"><p>Резерв — сумма исходящих переводов и их комиссий в мемпуле. Входящие ожидающие переводы пока нельзя потратить.</p><a href="{{ url_for('address_detail_page', address=address) }}">История этого адреса ↗</a></div>{% endif %}
+{% endblock %}

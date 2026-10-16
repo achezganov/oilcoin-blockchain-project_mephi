@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% from '_macros.html' import metric, tx_table with context %}
+{% block title %}Адрес кошелька · OilCoin{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('explorer_page') }}">← Проводник</a><div class="page-heading"><div><div class="eyebrow">ПУБЛИЧНЫЕ ДАННЫЕ</div><h1>Адрес кошелька</h1></div>{% if details.valid_address %}<a class="btn btn-secondary" href="{{ url_for('transaction_page', recipient=details.address) }}">Отправить OIL ↗</a>{% endif %}</div><div class="card address-heading"><span class="mono-wrap">{{ details.address }}</span><button class="copy-btn" type="button" data-copy="{{ details.address }}">Копировать адрес</button></div>
+{% if not details.valid_address %}<div class="flash flash-error" role="alert">Адрес имеет неверный формат OilCoin.</div>{% endif %}
+<section class="grid metrics-grid metrics-three section-space">{{ metric('Подтверждённый баланс', details.confirmed_balance, 'OIL') }}{{ metric('Зарезервировано', details.reserved_pending, 'OIL') }}{{ metric('Доступно для перевода', details.available_balance, 'OIL') }}</section>
+<section class="card section-space"><h2>История адреса</h2>{{ tx_table(details.operations, 'У этого адреса пока нет операций в цепочке или очереди.') }}</section><section class="note section-space"><h3>Почему здесь три баланса?</h3><p>Подтверждённый баланс рассчитан по блокам. Исходящие переводы в очереди резервируют сумму и комиссию. Доступный баланс — разница между подтверждёнными монетами и резервом. Входящий перевод станет доступным только после майнинга.</p></section>
+{% endblock %}
